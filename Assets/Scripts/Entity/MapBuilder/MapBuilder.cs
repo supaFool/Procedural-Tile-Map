@@ -70,6 +70,9 @@ public class MapBuilder : MonoBehaviour
     private int[,] m_terrainMap;
     private int[,] m_treeMap;
 
+    public GameObject WorldCache;
+    private WorldCacheComp m_worldCacheComp;
+
     #endregion Vars
 
     #region Overrides
@@ -78,6 +81,9 @@ public class MapBuilder : MonoBehaviour
     {
         mapSettings = new MapSettings();
         m_newMap = true;
+        if(m_worldCacheComp = WorldCache.GetComponent(typeof(WorldCacheComp)) as WorldCacheComp)
+        {
+        }
     }
 
     // Update is called once per frame
