@@ -38,6 +38,12 @@ public class MapBuilder : MonoBehaviour
     [SerializeField]
     private Tile FirstPassTile;
 
+    [SerializeField]
+    private bool m_simFirstPassMap;
+
+    [SerializeField]
+    private bool m_simSecondPassMap;
+
 
     //Temps
 
@@ -117,6 +123,7 @@ public class MapBuilder : MonoBehaviour
             UpdateMap();
         }
 
+        #region Controls
         if (Input.GetMouseButtonDown(0))
         {
             if (startRendering == true)
@@ -145,17 +152,14 @@ public class MapBuilder : MonoBehaviour
             //m_currentCellGap = 0;
             MapGrid.cellGap = new Vector3(0, 0, 0);
         }
+        #endregion
     }
 
     private void UpdateMap()
     {
-        //update = true;
-        //m_currentCellGap += m_iterations;
         MapGrid.cellGap = new Vector3(m_spacing, m_spacing, 0);
-        Debug.Log(FirstPassMap.cellGap);
 
         var oldTerraMap = m_terrainMap;
-        var oldForMap = m_treeMap;
 
         int[,] newMap = new int[oldTerraMap.GetLength(0), oldTerraMap.GetLength(1)];
 
@@ -176,8 +180,16 @@ public class MapBuilder : MonoBehaviour
                 newMap[x, y] = oldTerraMap[x, y];
             }
         }
+        if (m_simFirstPassMap)
+        {
         SimulateTerrain(LandMapSamples);
+        }
+        if (m_simSecondPassMap)
+        {
         SimulateTrees(DroughtSamples);
+        }
+        RenderMap();
+
     }
 
     #endregion Overrides
@@ -187,8 +199,6 @@ public class MapBuilder : MonoBehaviour
     private void SimulateTerrain(int samples)
     {
         SampleMap(samples);
-
-        RenderMap();
     }
 
     private void SampleMap(int samples)
@@ -211,6 +221,7 @@ public class MapBuilder : MonoBehaviour
                 if (m_terrainMap[x, y] == 1)
                 {
                     FirstPassMap.SetTile(new Vector3Int(-x + (m_terrainMap.GetLength(0)) / 2, -y + (m_terrainMap.GetLength(1)) / 2, 0), FirstPassTile);
+                    
                     var r = Random.Range(0, 100);
                     if (r <= 3)
                     {
@@ -221,8 +232,10 @@ public class MapBuilder : MonoBehaviour
                 if (m_terrainMap[x, y] == 0)
                 {
                     FirstPassMap.SetTile(new Vector3Int(-x + (m_terrainMap.GetLength(0)) / 2, -y + (m_terrainMap.GetLength(1)) / 2, 0), BaseTile);
+                    
                     m_treeMap[x, y] = 0;
                 }
+                
             }
         }
     }
