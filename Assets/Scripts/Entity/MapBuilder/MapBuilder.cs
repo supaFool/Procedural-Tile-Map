@@ -41,16 +41,39 @@ public class MapBuilder : MonoBehaviour
     [SerializeField]
     private Tile FiveTile;
 
+
+    //Temps
+
+    //Rivers
+    //28,3,2,4
+
+
+
+
     //Spawn Settings
+
+    /// <summary>
+    /// The starting land heigth
+    /// The higher the number, the more islands will be spawned for the algorithm to run on
+    /// </summary>
     [Range(15, 55)]
     public int InitialLandHeight;
 
+    /// <summary>
+    /// Higher the number, Higher the cells per tick that have a chance to reproduce
+    /// </summary>
     [Range(1, 16)]
     public int LandBirthLimit;
 
+    /// <summary>
+    /// The higher the number, the higher the probability of reproduction failure
+    /// </summary>
     [Range(1, 16)]
     public int LandDeathLimit;
 
+    /// <summary>
+    /// How many times to sample the map per tick, Higher numbers creates smoother bordered maps
+    /// </summary>
     [Range(1, 10)]
     public int LandMapSamples;
 

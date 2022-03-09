@@ -935,17 +935,17 @@ MonoBehaviour:
   BottomMap: {fileID: 339850481}
   TreeMap: {fileID: 70713529}
   TopTile: {fileID: 11400000, guid: 1ac333a5ef4d1fb47a5c81c3d3f12542, type: 2}
-  TreeTile: {fileID: 11400000, guid: 12457a563760fcb43806fdb5a03dad84, type: 2}
+  TreeTile: {fileID: 11400000, guid: 1ac333a5ef4d1fb47a5c81c3d3f12542, type: 2}
   BottomTile: {fileID: 11400000, guid: e23b2bd3acbc1634d9d6c8c5be5c2edf, type: 2}
   FiveTile: {fileID: 11400000, guid: f14087bf11969c84f84cbef4f93a24e6, type: 2}
-  m_activeChance: 29
-  BirthLimit: 3
-  DeathLimit: 3
-  Samples: 1
-  ForestActiveChance: 16
-  ForestBirthLimit: 2
-  ForestDeathLimit: 6
-  ForestSamples: 3
+  InitialLandHeight: 28
+  LandBirthLimit: 3
+  LandDeathLimit: 2
+  LandMapSamples: 4
+  InitialForestDensity: 1
+  DroughtFactor: 4
+  DroughtDeathLimit: 10
+  DroughtSamples: 6
   WorldCache: {fileID: 547389105}
 --- !u!1 &1693861516
 GameObject:
