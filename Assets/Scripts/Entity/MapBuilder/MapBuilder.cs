@@ -42,29 +42,29 @@ public class MapBuilder : MonoBehaviour
     private Tile FiveTile;
 
     //Spawn Settings
-    [Range(1, 100)]
-    public int m_activeChance;
+    [Range(15, 55)]
+    public int InitialLandHeight;
 
     [Range(1, 16)]
-    public int BirthLimit;
+    public int LandBirthLimit;
 
     [Range(1, 16)]
-    public int DeathLimit;
+    public int LandDeathLimit;
 
     [Range(1, 10)]
-    public int Samples;
+    public int LandMapSamples;
 
     [Range(1, 100)]
-    public int ForestActiveChance;
+    public int InitialForestDensity;
 
     [Range(1, 16)]
-    public int ForestBirthLimit;
+    public int DroughtFactor;
 
     [Range(1, 16)]
-    public int ForestDeathLimit;
+    public int DroughtDeathLimit;
 
     [Range(1, 10)]
-    public int ForestSamples;
+    public int DroughtSamples;
 
     private bool m_newMap;
     private int[,] m_terrainMap;
@@ -159,8 +159,8 @@ public class MapBuilder : MonoBehaviour
                 newMap[x, y] = oldTerraMap[x, y];
             }
         }
-        SimulateTerrain(Samples);
-        SimulateTrees(ForestSamples);
+        SimulateTerrain(LandMapSamples);
+        SimulateTrees(DroughtSamples);
     }
 
     #endregion Overrides
@@ -233,8 +233,8 @@ public class MapBuilder : MonoBehaviour
         Debug.Log("Building Terrain");
         ClearMap(false);
         InitMapGrid();
-        SimulateTerrain(Samples);
-        SimulateTrees(ForestSamples);
+        SimulateTerrain(LandMapSamples);
+        SimulateTrees(DroughtSamples);
     }
 
     private void InitMapGrid()
@@ -264,7 +264,7 @@ public class MapBuilder : MonoBehaviour
                 {
                     if (tempMap[x, y] == 5)
                     {
-                        tempMap[x, y] = Random.Range(1, 101) < m_activeChance ? 1 : 0;
+                        tempMap[x, y] = Random.Range(1, 101) < InitialLandHeight ? 1 : 0;
                     }
 
                     neighbor = 0;
@@ -283,7 +283,7 @@ public class MapBuilder : MonoBehaviour
                     }
                     if (tempMap[x, y] == 1)
                     {
-                        if (neighbor < DeathLimit) updatedMap[x, y] = 0;
+                        if (neighbor < LandDeathLimit) updatedMap[x, y] = 0;
                         else
                         {
                             updatedMap[x, y] = 1;
@@ -291,7 +291,7 @@ public class MapBuilder : MonoBehaviour
                     }
                     if (tempMap[x, y] == 0)
                     {
-                        if (neighbor > BirthLimit) updatedMap[x, y] = 1;
+                        if (neighbor > LandBirthLimit) updatedMap[x, y] = 1;
                         else
                         {
                             updatedMap[x, y] = 0;
@@ -328,7 +328,7 @@ public class MapBuilder : MonoBehaviour
                     }
                     if (tempMap[x, y] == 1)
                     {
-                        if (neighbor < DeathLimit) updatedMap[x, y] = 0;
+                        if (neighbor < LandDeathLimit) updatedMap[x, y] = 0;
                         else
                         {
                             updatedMap[x, y] = 1;
@@ -336,7 +336,7 @@ public class MapBuilder : MonoBehaviour
                     }
                     if (tempMap[x, y] == 0)
                     {
-                        if (neighbor > BirthLimit) updatedMap[x, y] = 1;
+                        if (neighbor > LandBirthLimit) updatedMap[x, y] = 1;
                         else
                         {
                             updatedMap[x, y] = 0;
@@ -366,7 +366,7 @@ public class MapBuilder : MonoBehaviour
                 //Init Treemap
                 if (m_treeMap[x, y] == 9)
                 {
-                    m_treeMap[x, y] = Random.Range(1, 101) < ForestActiveChance ? 3 : 4;
+                    m_treeMap[x, y] = Random.Range(1, 101) < InitialForestDensity ? 3 : 4;
                 }
                 neighbor = 0;
                 foreach (var b in bounds.allPositionsWithin)
@@ -384,7 +384,7 @@ public class MapBuilder : MonoBehaviour
                 }
                 if (tempMap[x, y] == 3)
                 {
-                    if (neighbor < ForestDeathLimit) newMap[x, y] = 4;
+                    if (neighbor < DroughtDeathLimit) newMap[x, y] = 4;
                     else
                     {
                         newMap[x, y] = 3;
@@ -393,7 +393,7 @@ public class MapBuilder : MonoBehaviour
 
                 if (tempMap[x, y] == 4)
                 {
-                    if (neighbor > BirthLimit) newMap[x, y] = 3;
+                    if (neighbor > LandBirthLimit) newMap[x, y] = 3;
                     else
                     {
                         newMap[x, y] = 4;
@@ -414,7 +414,7 @@ public class MapBuilder : MonoBehaviour
         {
             for (int y = 0; y < mapSettings.Height; y++)
             {
-                m_terrainMap[x, y] = Random.Range(1, 101) < m_activeChance ? 1 : 0;
+                m_terrainMap[x, y] = Random.Range(1, 101) < InitialLandHeight ? 1 : 0;
             }
         }
     }
@@ -428,7 +428,7 @@ public class MapBuilder : MonoBehaviour
                 //Init Treemap
                 if (m_treeMap[x, y] == 9)
                 {
-                    m_treeMap[x, y] = Random.Range(1, 101) < ForestActiveChance ? 3 : 4;
+                    m_treeMap[x, y] = Random.Range(1, 101) < InitialForestDensity ? 3 : 4;
                 }
             }
         }
