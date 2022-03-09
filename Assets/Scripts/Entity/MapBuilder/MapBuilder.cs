@@ -21,25 +21,22 @@ public class MapBuilder : MonoBehaviour
     #endregion GridSpacing vars
 
     [SerializeField]
-    private Tilemap TopMap;
+    private Tilemap FirstPassMap;
 
     [SerializeField]
-    private Tilemap BottomMap;
+    private Tilemap SecondPassMap;
 
     [SerializeField]
     private Tilemap TreeMap;
 
     [SerializeField]
-    private Tile TopTile;
+    private Tile SecondPassTile;
 
     [SerializeField]
-    private Tile TreeTile;
+    private Tile BaseTile;
 
     [SerializeField]
-    private Tile BottomTile;
-
-    [SerializeField]
-    private Tile FiveTile;
+    private Tile FirstPassTile;
 
 
     //Temps
@@ -104,9 +101,6 @@ public class MapBuilder : MonoBehaviour
     {
         mapSettings = new MapSettings();
         m_newMap = true;
-        if(m_worldCacheComp = WorldCache.GetComponent(typeof(WorldCacheComp)) as WorldCacheComp)
-        {
-        }
     }
 
     // Update is called once per frame
@@ -158,7 +152,7 @@ public class MapBuilder : MonoBehaviour
         //update = true;
         //m_currentCellGap += m_iterations;
         MapGrid.cellGap = new Vector3(m_spacing, m_spacing, 0);
-        Debug.Log(TopMap.cellGap);
+        Debug.Log(FirstPassMap.cellGap);
 
         var oldTerraMap = m_terrainMap;
         var oldForMap = m_treeMap;
@@ -216,7 +210,7 @@ public class MapBuilder : MonoBehaviour
 
                 if (m_terrainMap[x, y] == 1)
                 {
-                    TopMap.SetTile(new Vector3Int(-x + (m_terrainMap.GetLength(0)) / 2, -y + (m_terrainMap.GetLength(1)) / 2, 0), FiveTile);
+                    FirstPassMap.SetTile(new Vector3Int(-x + (m_terrainMap.GetLength(0)) / 2, -y + (m_terrainMap.GetLength(1)) / 2, 0), FirstPassTile);
                     var r = Random.Range(0, 100);
                     if (r <= 3)
                     {
@@ -226,7 +220,7 @@ public class MapBuilder : MonoBehaviour
 
                 if (m_terrainMap[x, y] == 0)
                 {
-                    TopMap.SetTile(new Vector3Int(-x + (m_terrainMap.GetLength(0)) / 2, -y + (m_terrainMap.GetLength(1)) / 2, 0), BottomTile);
+                    FirstPassMap.SetTile(new Vector3Int(-x + (m_terrainMap.GetLength(0)) / 2, -y + (m_terrainMap.GetLength(1)) / 2, 0), BaseTile);
                     m_treeMap[x, y] = 0;
                 }
             }
@@ -245,7 +239,7 @@ public class MapBuilder : MonoBehaviour
             {
                 if (m_treeMap[x, y] == 3)
                 {
-                    TreeMap.SetTile(new Vector3Int(-x + mapSettings.Width / 2, -y + mapSettings.Height / 2, 0), TopTile);
+                    TreeMap.SetTile(new Vector3Int(-x + mapSettings.Width / 2, -y + mapSettings.Height / 2, 0), SecondPassTile);
                 }
             }
         }
@@ -459,8 +453,8 @@ public class MapBuilder : MonoBehaviour
 
     private void ClearMap(bool v)
     {
-        TopMap.ClearAllTiles();
-        BottomMap.ClearAllTiles();
+        FirstPassMap.ClearAllTiles();
+        SecondPassMap.ClearAllTiles();
         TreeMap.ClearAllTiles();
 
         if (v)

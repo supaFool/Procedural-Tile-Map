@@ -611,7 +611,7 @@ GameObject:
   - component: {fileID: 992030717}
   - component: {fileID: 992030716}
   m_Layer: 0
-  m_Name: TopMap
+  m_Name: FirstPassMap
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -931,13 +931,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   MapGrid: {fileID: 1501650114}
-  TopMap: {fileID: 992030717}
-  BottomMap: {fileID: 339850481}
+  FirstPassMap: {fileID: 992030717}
+  SecondPassMap: {fileID: 0}
   TreeMap: {fileID: 70713529}
-  TopTile: {fileID: 11400000, guid: 1ac333a5ef4d1fb47a5c81c3d3f12542, type: 2}
-  TreeTile: {fileID: 11400000, guid: 1ac333a5ef4d1fb47a5c81c3d3f12542, type: 2}
-  BottomTile: {fileID: 11400000, guid: e23b2bd3acbc1634d9d6c8c5be5c2edf, type: 2}
-  FiveTile: {fileID: 11400000, guid: f14087bf11969c84f84cbef4f93a24e6, type: 2}
+  SecondPassTile: {fileID: 11400000, guid: 1ac333a5ef4d1fb47a5c81c3d3f12542, type: 2}
+  BaseTile: {fileID: 11400000, guid: e23b2bd3acbc1634d9d6c8c5be5c2edf, type: 2}
+  FirstPassTile: {fileID: 11400000, guid: f14087bf11969c84f84cbef4f93a24e6, type: 2}
   InitialLandHeight: 28
   LandBirthLimit: 3
   LandDeathLimit: 2
