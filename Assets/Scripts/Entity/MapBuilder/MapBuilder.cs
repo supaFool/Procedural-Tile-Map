@@ -62,6 +62,11 @@ public class MapBuilder : MonoBehaviour
     [Range(15, 55)]
     public int InitialLandHeight;
 
+    [Range(1, 30)]
+    public int LandMapIterations;
+
+    private int m_actualIterations;
+
     /// <summary>
     /// Higher the number, Higher the cells per tick that have a chance to reproduce
     /// </summary>
@@ -119,8 +124,12 @@ public class MapBuilder : MonoBehaviour
 
         if (startRendering)
         {
-            //m_iterations++;
+            m_actualIterations++;
             UpdateMap();
+            if(m_actualIterations >= LandMapIterations)
+            {
+                m_simFirstPassMap = false;
+            }
         }
 
         #region Controls
@@ -148,6 +157,8 @@ public class MapBuilder : MonoBehaviour
             startRendering = false;
             m_newMap = true;
             ClearMap(true);
+            m_actualIterations = 0;
+            m_simFirstPassMap = true;
             //m_iterations = 0;
             //m_currentCellGap = 0;
             MapGrid.cellGap = new Vector3(0, 0, 0);
