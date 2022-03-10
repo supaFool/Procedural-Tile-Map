@@ -1,6 +1,5 @@
 ﻿using UnityEngine;
 using UnityEngine.Tilemaps;
-using UnityEngine.UI;
 
 public class MapBuilder : MonoBehaviour
 {
@@ -126,7 +125,7 @@ public class MapBuilder : MonoBehaviour
         {
             m_actualIterations++;
             UpdateMap();
-            if(m_actualIterations >= LandMapIterations)
+            if (m_actualIterations >= LandMapIterations)
             {
                 m_simFirstPassMap = false;
             }
@@ -193,11 +192,11 @@ public class MapBuilder : MonoBehaviour
         }
         if (m_simFirstPassMap)
         {
-        SimulateTerrain(LandMapSamples);
+            SimulateTerrain(LandMapSamples);
         }
         if (m_simSecondPassMap)
         {
-        SimulateTrees(DroughtSamples);
+            SimulateTrees(DroughtSamples);
         }
         RenderMap();
 
@@ -232,7 +231,7 @@ public class MapBuilder : MonoBehaviour
                 if (m_terrainMap[x, y] == 1)
                 {
                     FirstPassMap.SetTile(new Vector3Int(-x + (m_terrainMap.GetLength(0)) / 2, -y + (m_terrainMap.GetLength(1)) / 2, 0), FirstPassTile);
-                    
+
                     var r = Random.Range(0, 100);
                     if (r <= 3)
                     {
@@ -243,10 +242,10 @@ public class MapBuilder : MonoBehaviour
                 if (m_terrainMap[x, y] == 0)
                 {
                     FirstPassMap.SetTile(new Vector3Int(-x + (m_terrainMap.GetLength(0)) / 2, -y + (m_terrainMap.GetLength(1)) / 2, 0), BaseTile);
-                    
+
                     m_treeMap[x, y] = 0;
                 }
-                
+
             }
         }
     }
