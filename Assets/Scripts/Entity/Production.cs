@@ -1,4 +1,4 @@
-﻿public abstract class ProductionItem : Item
+﻿public abstract class ProductionItem
 {
     public abstract string[] SkillAffected();
     public abstract string[] ToolsRequired();
