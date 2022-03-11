@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using UnityEngine.Tilemaps;
+using UnityEngine.UI;
 
 public class MapBuilder : MonoBehaviour
 {
@@ -60,9 +61,11 @@ public class MapBuilder : MonoBehaviour
     /// </summary>
     [Range(15, 55)]
     public int InitialLandHeight;
+    //public Slider LandHeightSlider;
 
     [Range(1, 30)]
     public int LandMapIterations;
+    public Slider LandIterationsSlider;
 
     private int m_actualIterations;
 
@@ -71,30 +74,39 @@ public class MapBuilder : MonoBehaviour
     /// </summary>
     [Range(1, 16)]
     public int LandBirthLimit;
+    public Slider LandBirthLimitSlider;
 
     /// <summary>
     /// The higher the number, the higher the probability of reproduction failure
     /// </summary>
     [Range(1, 16)]
     public int LandDeathLimit;
+    public Slider LandDeathLimitSlider;
 
     /// <summary>
     /// How many times to sample the map per tick, Higher numbers creates smoother bordered maps
     /// </summary>
     [Range(1, 10)]
     public int LandMapSamples;
+    public Slider LandSamplesSlider;
 
     [Range(1, 100)]
     public int InitialForestDensity;
+    public Slider ForestDensitySlider;
 
     [Range(1, 16)]
     public int DroughtFactor;
+    public Slider DroughtFactorSlider;
 
     [Range(1, 16)]
     public int DroughtDeathLimit;
+    public Slider DroughtDeathLimitSlider;
 
     [Range(1, 10)]
     public int DroughtSamples;
+    public Slider DroughtSampleSlider;
+
+    public Button SimButton;
 
     private bool m_newMap;
     private int[,] m_terrainMap;
@@ -111,6 +123,8 @@ public class MapBuilder : MonoBehaviour
     {
         mapSettings = new MapSettings();
         m_newMap = true;
+        SimButton.onClick.AddListener(SimButtonAction) ;
+        SetSliders();
     }
 
     // Update is called once per frame
@@ -132,24 +146,24 @@ public class MapBuilder : MonoBehaviour
         }
 
         #region Controls
-        if (Input.GetMouseButtonDown(0))
-        {
-            if (startRendering == true)
-            {
-                startRendering = false;
-            }
-            else
-            {
-                startRendering = true;
-            }
-            if (m_newMap && startRendering)
-            {
-                Simulate();
-                m_newMap = false;
-            }
-            //update = false;
-            //Simulate();
-        }
+        //if (Input.GetMouseButtonDown(0))
+        //{
+        //    if (startRendering == true)
+        //    {
+        //        startRendering = false;
+        //    }
+        //    else
+        //    {
+        //        startRendering = true;
+        //    }
+        //    if (m_newMap && startRendering)
+        //    {
+        //        Simulate();
+        //        m_newMap = false;
+        //    }
+        //    //update = false;
+        //    //Simulate();
+        //}
 
         if (Input.GetMouseButtonDown(1))
         {
@@ -161,8 +175,25 @@ public class MapBuilder : MonoBehaviour
             //m_iterations = 0;
             //m_currentCellGap = 0;
             MapGrid.cellGap = new Vector3(0, 0, 0);
+            SimButton.GetComponentInChildren<Text>().text = "Simulate";
         }
         #endregion
+    }
+    public void SimButtonAction()
+    {
+        startRendering = !startRendering;
+        if (m_newMap && startRendering)
+        {
+            Simulate();
+            m_newMap = false;
+        }
+
+        if (SimButton.GetComponentInChildren<Text>().text == "Simulate")
+        {
+            SimButton.GetComponentInChildren<Text>().text = "Stop";
+        }
+        else
+            SimButton.GetComponentInChildren<Text>().text = "Simulate";
     }
 
     private void UpdateMap()
@@ -205,6 +236,72 @@ public class MapBuilder : MonoBehaviour
     #endregion Overrides
 
     #region Functions
+    private void SetSliders()
+    {
+        //LandHeightSlider.onValueChanged.AddListener(delegate { SetStartingTerrainHeight(((int)LandHeightSlider.value)); });
+        LandIterationsSlider.onValueChanged.AddListener(delegate { SetLandIteration(((int)LandIterationsSlider.value)); });
+        LandBirthLimitSlider.onValueChanged.AddListener(delegate { SetLandBirthLimiter(((int)LandBirthLimitSlider.value)); });
+        LandDeathLimitSlider.onValueChanged.AddListener(delegate { SetLandDeathLimit(((int)LandDeathLimitSlider.value)); });
+        LandSamplesSlider.onValueChanged.AddListener(delegate { SetLandSamples(((int)LandSamplesSlider.value)); });
+        ForestDensitySlider.onValueChanged.AddListener(delegate { SetForestDensity(((int)ForestDensitySlider.value)); });
+        DroughtFactorSlider.onValueChanged.AddListener(delegate { SetDroughtFactor(((int)DroughtFactorSlider.value)); });
+        DroughtDeathLimitSlider.onValueChanged.AddListener(delegate { SetDroughtDeathLimit(((int)DroughtDeathLimitSlider.value)); });
+        DroughtSampleSlider.onValueChanged.AddListener(delegate { SetDroughtSamples(((int)DroughtSampleSlider.value)); });
+    }
+    public void SetForestDensity(int h)
+    {
+        InitialForestDensity = h;
+        Debug.Log($"Forest Density set to: {h}");
+    }
+
+    public void SetDroughtFactor(int h)
+    {
+        DroughtFactor = h;
+        Debug.Log($"Drought Factor set to: {h}");
+    }
+
+    public void SetDroughtSamples(int h)
+    {
+        DroughtSamples = h;
+        Debug.Log($"Drought Samples set to: {h}");
+    }
+
+    public void SetDroughtDeathLimit(int h)
+    {
+        DroughtDeathLimit = h;
+        Debug.Log($"Drought Death Limit set to: {h}");
+    }
+
+    public void SetStartingTerrainHeight(int h)
+    {
+        InitialLandHeight = h;
+        Debug.Log($"Land Height set to: {h}");
+    }
+
+
+    public void SetLandSamples(int h)
+    {
+        LandMapSamples = h;
+        Debug.Log($"Land Samples set to: {h}");
+    }
+
+    public void SetLandDeathLimit(int h)
+    {
+        LandDeathLimit = h;
+        Debug.Log($"Land Death Limit set to: {h}");
+    }
+
+    public void SetLandBirthLimiter(int h)
+    {
+        LandBirthLimit = h;
+        Debug.Log($"Land Birth Limit set to: {h}");
+    }
+
+    public void SetLandIteration(int h)
+    {
+        LandMapIterations = h;
+        Debug.Log($"Land Iterations set to: {h}");
+    }
 
     private void SimulateTerrain(int samples)
     {
