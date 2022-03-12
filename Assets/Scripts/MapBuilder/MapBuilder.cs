@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class MapBuilder : MonoBehaviour
 {
+    [Header("Grid Settings")]
     [SerializeField]
     private Grid MapGrid;
 
@@ -38,6 +39,8 @@ public class MapBuilder : MonoBehaviour
     [SerializeField]
     private Tile FirstPassTile;
 
+    [Header("Build Settings")]
+    [Space(10)]
     [SerializeField]
     private bool m_simFirstPassMap;
 
@@ -60,11 +63,11 @@ public class MapBuilder : MonoBehaviour
     /// The higher the number, the more islands will be spawned for the algorithm to run on
     /// </summary>
     [Range(15, 55)]
-    public int InitialLandHeight;
+    public int InitialLandHeight = 26;
     //public Slider LandHeightSlider;
 
-    [Range(1, 30)]
-    public int LandMapIterations;
+    //[Range(1, 30)]
+    private int LandMapIterations = 6;
     public Slider LandIterationsSlider;
     public TMPro.TextMeshProUGUI LandMapIterationsText;
 
@@ -73,44 +76,44 @@ public class MapBuilder : MonoBehaviour
     /// <summary>
     /// Higher the number, Higher the cells per tick that have a chance to reproduce
     /// </summary>
-    [Range(1, 16)]
-    public int LandBirthLimit;
+    //[Range(1, 16)]
+    private int LandBirthLimit = 3;
     public Slider LandBirthLimitSlider;
     public TMPro.TextMeshProUGUI LandBirthText;
 
     /// <summary>
     /// The higher the number, the higher the probability of reproduction failure
     /// </summary>
-    [Range(1, 16)]
-    public int LandDeathLimit;
+    //[Range(1, 16)]
+    private int LandDeathLimit = 2;
     public Slider LandDeathLimitSlider;
     public TMPro.TextMeshProUGUI LandDeathText; 
 
     /// <summary>
     /// How many times to sample the map per tick, Higher numbers creates smoother bordered maps
     /// </summary>
-    [Range(1, 10)]
-    public int LandMapSamples;
+    //[Range(1, 10)]
+    private int LandMapSamples = 6;
     public Slider LandSamplesSlider;
     public TMPro.TextMeshProUGUI LandSampleText; 
 
-    [Range(1, 100)]
-    public int InitialPopulationDensity;
+    //[Range(1, 100)]
+    private int InitialPopulationDensity = 3;
     public Slider ForestDensitySlider;
     public TMPro.TextMeshProUGUI PopulationDensityText; 
 
-    [Range(1, 16)]
-    public int PopulationBirthFactor;
+    //[Range(1, 16)]
+    private int PopulationBirthFactor = 9;
     public Slider PopulationBirthFactorSlider;
     public TMPro.TextMeshProUGUI PopulationBirthText;
 
-    [Range(1, 16)]
-    public int PopulationDeathFactor;
+    //[Range(1, 16)]
+    private int PopulationDeathFactor = 8;
     public Slider PopulationDeathSlider;
     public TMPro.TextMeshProUGUI PopulationDeathText;
 
-    [Range(1, 10)]
-    public int PopulationSamples;
+    //[Range(1, 10)]
+    private int PopulationSamples = 9;
     public Slider PopulationSampleSlider;
     public TMPro.TextMeshProUGUI PopulationSamplesText;
 
@@ -271,24 +274,28 @@ public class MapBuilder : MonoBehaviour
     public void SetInitialPopDensity(int h)
     {
         InitialPopulationDensity = h;
+        PopulationDensityText.text = InitialPopulationDensity.ToString();
         Debug.Log($"Forest Density set to: {h}");
     }
 
     public void SetPopulationBirthFactor(int h)
     {
         PopulationBirthFactor = h;
+        PopulationBirthText.text = PopulationBirthFactor.ToString();
         Debug.Log($"Drought Factor set to: {h}");
     }
 
     public void SetPopulationSamples(int h)
     {
         PopulationSamples = h;
+        PopulationSamplesText.text = PopulationSamples.ToString();
         Debug.Log($"Drought Samples set to: {h}");
     }
 
     public void SetPopulationDeathFactor(int h)
     {
         PopulationDeathFactor = h;
+        PopulationDeathText.text = PopulationDeathFactor.ToString();
         Debug.Log($"Drought Death Limit set to: {h}");
     }
 
@@ -555,7 +562,7 @@ public class MapBuilder : MonoBehaviour
 
                 if (tempMap[x, y] == 4)
                 {
-                    if (neighbor > LandBirthLimit) newMap[x, y] = 3;
+                    if (neighbor > PopulationBirthFactor) newMap[x, y] = 3;
                     else
                     {
                         newMap[x, y] = 4;
