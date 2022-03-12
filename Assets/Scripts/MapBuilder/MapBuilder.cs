@@ -66,6 +66,7 @@ public class MapBuilder : MonoBehaviour
     [Range(1, 30)]
     public int LandMapIterations;
     public Slider LandIterationsSlider;
+    public TMPro.TextMeshProUGUI LandMapIterationsText;
 
     private int m_actualIterations;
 
@@ -75,6 +76,7 @@ public class MapBuilder : MonoBehaviour
     [Range(1, 16)]
     public int LandBirthLimit;
     public Slider LandBirthLimitSlider;
+    public TMPro.TextMeshProUGUI LandBirthText;
 
     /// <summary>
     /// The higher the number, the higher the probability of reproduction failure
@@ -82,6 +84,7 @@ public class MapBuilder : MonoBehaviour
     [Range(1, 16)]
     public int LandDeathLimit;
     public Slider LandDeathLimitSlider;
+    public TMPro.TextMeshProUGUI LandDeathText; 
 
     /// <summary>
     /// How many times to sample the map per tick, Higher numbers creates smoother bordered maps
@@ -89,22 +92,27 @@ public class MapBuilder : MonoBehaviour
     [Range(1, 10)]
     public int LandMapSamples;
     public Slider LandSamplesSlider;
+    public TMPro.TextMeshProUGUI LandSampleText; 
 
     [Range(1, 100)]
-    public int InitialForestDensity;
+    public int InitialPopulationDensity;
     public Slider ForestDensitySlider;
+    public TMPro.TextMeshProUGUI PopulationDensityText; 
 
     [Range(1, 16)]
-    public int DroughtFactor;
-    public Slider DroughtFactorSlider;
+    public int PopulationBirthFactor;
+    public Slider PopulationBirthFactorSlider;
+    public TMPro.TextMeshProUGUI PopulationBirthText;
 
     [Range(1, 16)]
-    public int DroughtDeathLimit;
-    public Slider DroughtDeathLimitSlider;
+    public int PopulationDeathFactor;
+    public Slider PopulationDeathSlider;
+    public TMPro.TextMeshProUGUI PopulationDeathText;
 
     [Range(1, 10)]
-    public int DroughtSamples;
-    public Slider DroughtSampleSlider;
+    public int PopulationSamples;
+    public Slider PopulationSampleSlider;
+    public TMPro.TextMeshProUGUI PopulationSamplesText;
 
     public Button SimButton;
 
@@ -227,7 +235,7 @@ public class MapBuilder : MonoBehaviour
         }
         if (m_simSecondPassMap)
         {
-            SimulateTrees(DroughtSamples);
+            SimulateTrees(PopulationSamples);
         }
         RenderMap();
 
@@ -243,32 +251,44 @@ public class MapBuilder : MonoBehaviour
         LandBirthLimitSlider.onValueChanged.AddListener(delegate { SetLandBirthLimiter(((int)LandBirthLimitSlider.value)); });
         LandDeathLimitSlider.onValueChanged.AddListener(delegate { SetLandDeathLimit(((int)LandDeathLimitSlider.value)); });
         LandSamplesSlider.onValueChanged.AddListener(delegate { SetLandSamples(((int)LandSamplesSlider.value)); });
-        ForestDensitySlider.onValueChanged.AddListener(delegate { SetForestDensity(((int)ForestDensitySlider.value)); });
-        DroughtFactorSlider.onValueChanged.AddListener(delegate { SetDroughtFactor(((int)DroughtFactorSlider.value)); });
-        DroughtDeathLimitSlider.onValueChanged.AddListener(delegate { SetDroughtDeathLimit(((int)DroughtDeathLimitSlider.value)); });
-        DroughtSampleSlider.onValueChanged.AddListener(delegate { SetDroughtSamples(((int)DroughtSampleSlider.value)); });
+        ForestDensitySlider.onValueChanged.AddListener(delegate { SetInitialPopDensity(((int)ForestDensitySlider.value)); });
+        PopulationBirthFactorSlider.onValueChanged.AddListener(delegate { SetPopulationBirthFactor(((int)PopulationBirthFactorSlider.value)); });
+        PopulationDeathSlider.onValueChanged.AddListener(delegate { SetPopulationDeathFactor(((int)PopulationDeathSlider.value)); });
+        PopulationSampleSlider.onValueChanged.AddListener(delegate { SetPopulationSamples(((int)PopulationSampleSlider.value)); });
+        InitSliders();
     }
-    public void SetForestDensity(int h)
+    private void InitSliders()
     {
-        InitialForestDensity = h;
+        LandMapIterationsText.text = LandMapIterations.ToString();
+        LandBirthText.text = LandBirthLimit.ToString();
+        LandDeathText.text = LandDeathLimit.ToString();
+        LandSampleText.text = LandMapSamples.ToString();
+        PopulationDensityText.text = InitialPopulationDensity.ToString();
+        PopulationBirthText.text = PopulationBirthFactor.ToString();
+        PopulationDeathText.text = PopulationDeathFactor.ToString();
+        PopulationSamplesText.text = PopulationSamples.ToString();
+    }
+    public void SetInitialPopDensity(int h)
+    {
+        InitialPopulationDensity = h;
         Debug.Log($"Forest Density set to: {h}");
     }
 
-    public void SetDroughtFactor(int h)
+    public void SetPopulationBirthFactor(int h)
     {
-        DroughtFactor = h;
+        PopulationBirthFactor = h;
         Debug.Log($"Drought Factor set to: {h}");
     }
 
-    public void SetDroughtSamples(int h)
+    public void SetPopulationSamples(int h)
     {
-        DroughtSamples = h;
+        PopulationSamples = h;
         Debug.Log($"Drought Samples set to: {h}");
     }
 
-    public void SetDroughtDeathLimit(int h)
+    public void SetPopulationDeathFactor(int h)
     {
-        DroughtDeathLimit = h;
+        PopulationDeathFactor = h;
         Debug.Log($"Drought Death Limit set to: {h}");
     }
 
@@ -282,24 +302,29 @@ public class MapBuilder : MonoBehaviour
     public void SetLandSamples(int h)
     {
         LandMapSamples = h;
+        LandSampleText.text = $"{h}";
         Debug.Log($"Land Samples set to: {h}");
     }
 
     public void SetLandDeathLimit(int h)
     {
         LandDeathLimit = h;
+        LandDeathText.text = $"{h}";
         Debug.Log($"Land Death Limit set to: {h}");
     }
 
     public void SetLandBirthLimiter(int h)
     {
         LandBirthLimit = h;
+        LandBirthText.text = $"{h}";
         Debug.Log($"Land Birth Limit set to: {h}");
+
     }
 
     public void SetLandIteration(int h)
     {
         LandMapIterations = h;
+        LandMapIterationsText.text = $"{h}";
         Debug.Log($"Land Iterations set to: {h}");
     }
 
@@ -371,7 +396,7 @@ public class MapBuilder : MonoBehaviour
         ClearMap(false);
         InitMapGrid();
         SimulateTerrain(LandMapSamples);
-        SimulateTrees(DroughtSamples);
+        SimulateTrees(PopulationSamples);
     }
 
     private void InitMapGrid()
@@ -503,7 +528,7 @@ public class MapBuilder : MonoBehaviour
                 //Init Treemap
                 if (m_treeMap[x, y] == 9)
                 {
-                    m_treeMap[x, y] = Random.Range(1, 101) < InitialForestDensity ? 3 : 4;
+                    m_treeMap[x, y] = Random.Range(1, 101) < InitialPopulationDensity ? 3 : 4;
                 }
                 neighbor = 0;
                 foreach (var b in bounds.allPositionsWithin)
@@ -521,7 +546,7 @@ public class MapBuilder : MonoBehaviour
                 }
                 if (tempMap[x, y] == 3)
                 {
-                    if (neighbor < DroughtDeathLimit) newMap[x, y] = 4;
+                    if (neighbor < PopulationDeathFactor) newMap[x, y] = 4;
                     else
                     {
                         newMap[x, y] = 3;
@@ -565,7 +590,7 @@ public class MapBuilder : MonoBehaviour
                 //Init Treemap
                 if (m_treeMap[x, y] == 9)
                 {
-                    m_treeMap[x, y] = Random.Range(1, 101) < InitialForestDensity ? 3 : 4;
+                    m_treeMap[x, y] = Random.Range(1, 101) < InitialPopulationDensity ? 3 : 4;
                 }
             }
         }
