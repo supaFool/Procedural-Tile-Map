@@ -1112,31 +1112,23 @@ MonoBehaviour:
   SecondPassTile: {fileID: 11400000, guid: 1ac333a5ef4d1fb47a5c81c3d3f12542, type: 2}
   BaseTile: {fileID: 11400000, guid: e23b2bd3acbc1634d9d6c8c5be5c2edf, type: 2}
   FirstPassTile: {fileID: 11400000, guid: f14087bf11969c84f84cbef4f93a24e6, type: 2}
-  m_simFirstPassMap: 0
+  m_simFirstPassMap: 1
   m_simSecondPassMap: 1
   InitialLandHeight: 26
-  LandMapIterations: 6
   LandIterationsSlider: {fileID: 716299790}
   LandMapIterationsText: {fileID: 1893384377}
-  LandBirthLimit: 3
   LandBirthLimitSlider: {fileID: 332551057}
   LandBirthText: {fileID: 1487437017}
-  LandDeathLimit: 2
   LandDeathLimitSlider: {fileID: 901395700}
   LandDeathText: {fileID: 8740171587166802462}
-  LandMapSamples: 6
   LandSamplesSlider: {fileID: 122943552}
   LandSampleText: {fileID: 5186333907911937044}
-  InitialPopulationDensity: 3
   ForestDensitySlider: {fileID: 68933239}
   PopulationDensityText: {fileID: 5339090639477904410}
-  PopulationBirthFactor: 10
   PopulationBirthFactorSlider: {fileID: 1723948755}
   PopulationBirthText: {fileID: 7317912707973359879}
-  PopulationDeathFactor: 8
   PopulationDeathSlider: {fileID: 468297143}
   PopulationDeathText: {fileID: 8914843382950317323}
-  PopulationSamples: 8
   PopulationSampleSlider: {fileID: 541651056}
   PopulationSamplesText: {fileID: 2658201250240213879}
   SimButton: {fileID: 1031111394}
@@ -2121,6 +2113,16 @@ PrefabInstance:
         type: 3}
       propertyPath: m_AnchorMax.y
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 5339090639410315886, guid: 0a186d446d25d8a40ba60b4a29ef078e,
+        type: 3}
+      propertyPath: m_Value
+      value: 2.9
+      objectReference: {fileID: 0}
+    - target: {fileID: 5339090639410315886, guid: 0a186d446d25d8a40ba60b4a29ef078e,
+        type: 3}
+      propertyPath: m_MaxValue
+      value: 10
       objectReference: {fileID: 0}
     - target: {fileID: 5339090639882857570, guid: 0a186d446d25d8a40ba60b4a29ef078e,
         type: 3}

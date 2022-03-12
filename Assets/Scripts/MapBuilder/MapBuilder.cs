@@ -98,22 +98,22 @@ public class MapBuilder : MonoBehaviour
     public TMPro.TextMeshProUGUI LandSampleText; 
 
     //[Range(1, 100)]
-    private int InitialPopulationDensity = 3;
+    private int InitialPopulationDensity = 2;
     public Slider ForestDensitySlider;
     public TMPro.TextMeshProUGUI PopulationDensityText; 
 
     //[Range(1, 16)]
-    private int PopulationBirthFactor = 9;
+    private int PopulationBirthFactor = 5;
     public Slider PopulationBirthFactorSlider;
     public TMPro.TextMeshProUGUI PopulationBirthText;
 
     //[Range(1, 16)]
-    private int PopulationDeathFactor = 8;
+    private int PopulationDeathFactor = 11;
     public Slider PopulationDeathSlider;
     public TMPro.TextMeshProUGUI PopulationDeathText;
 
     //[Range(1, 10)]
-    private int PopulationSamples = 9;
+    private int PopulationSamples = 10;
     public Slider PopulationSampleSlider;
     public TMPro.TextMeshProUGUI PopulationSamplesText;
 
