@@ -1201,6 +1201,7 @@ GameObject:
   - component: {fileID: 1501650115}
   - component: {fileID: 1501650114}
   - component: {fileID: 1501650116}
+  - component: {fileID: 1501650117}
   m_Layer: 0
   m_Name: TileMapWrapper
   m_TagString: Untagged
@@ -1249,6 +1250,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f6820c845b7530441ab56c93a3adbc3c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  map: {fileID: 1501650117}
   MapGrid: {fileID: 1501650114}
   FirstPassMap: {fileID: 992030717}
   SecondPassMap: {fileID: 339850481}
@@ -1278,6 +1280,18 @@ MonoBehaviour:
   SimButton: {fileID: 1031111394}
   ResetButton: {fileID: 1719864231}
   WorldCache: {fileID: 0}
+--- !u!114 &1501650117
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1501650113}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 33a81ccb32c8d8145b92d0c7e5d72840, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1533446191
 GameObject:
   m_ObjectHideFlags: 0
