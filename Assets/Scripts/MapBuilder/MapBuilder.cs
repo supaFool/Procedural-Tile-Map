@@ -53,9 +53,6 @@ public class MapBuilder : MonoBehaviour
     //Rivers
     //28,3,2,4
 
-
-
-
     //Spawn Settings
 
     /// <summary>
@@ -87,7 +84,7 @@ public class MapBuilder : MonoBehaviour
     //[Range(1, 16)]
     private int LandDeathLimit = 2;
     public Slider LandDeathLimitSlider;
-    public TMPro.TextMeshProUGUI LandDeathText; 
+    public TMPro.TextMeshProUGUI LandDeathText;
 
     /// <summary>
     /// How many times to sample the map per tick, Higher numbers creates smoother bordered maps
@@ -95,12 +92,12 @@ public class MapBuilder : MonoBehaviour
     //[Range(1, 10)]
     private int LandMapSamples = 6;
     public Slider LandSamplesSlider;
-    public TMPro.TextMeshProUGUI LandSampleText; 
+    public TMPro.TextMeshProUGUI LandSampleText;
 
     //[Range(1, 100)]
     private int InitialPopulationDensity = 2;
     public Slider ForestDensitySlider;
-    public TMPro.TextMeshProUGUI PopulationDensityText; 
+    public TMPro.TextMeshProUGUI PopulationDensityText;
 
     //[Range(1, 16)]
     private int PopulationBirthFactor = 5;
@@ -117,12 +114,17 @@ public class MapBuilder : MonoBehaviour
     public Slider PopulationSampleSlider;
     public TMPro.TextMeshProUGUI PopulationSamplesText;
 
+    [Header("Controls")]
+    [Space(5)]
     public Button SimButton;
+    public Button ResetButton;
 
     private bool m_newMap;
     private int[,] m_terrainMap;
     private int[,] m_treeMap;
 
+    [Header("Not yet used")]
+    [Space(5)]
     public GameObject WorldCache;
     private WorldCacheComp m_worldCacheComp;
 
@@ -135,6 +137,7 @@ public class MapBuilder : MonoBehaviour
         mapSettings = new MapSettings();
         m_newMap = true;
         SimButton.onClick.AddListener(SimButtonAction) ;
+        ResetButton.onClick.AddListener(ResetValues) ;
         SetSliders();
     }
 
@@ -190,6 +193,21 @@ public class MapBuilder : MonoBehaviour
         }
         #endregion
     }
+
+    private void ResetValues()
+    {
+        InitialLandHeight = 26;
+        LandMapIterations = 6;
+        LandBirthLimit = 3;
+        LandDeathLimit = 2;
+        LandMapSamples = 6;
+        InitialPopulationDensity = 2;
+        PopulationBirthFactor = 5;
+        PopulationDeathFactor = 11;
+        PopulationSamples = 10;
+        InitSliders();
+    }
+
     public void SimButtonAction()
     {
         startRendering = !startRendering;
@@ -263,13 +281,28 @@ public class MapBuilder : MonoBehaviour
     private void InitSliders()
     {
         LandMapIterationsText.text = LandMapIterations.ToString();
+        LandIterationsSlider.value = LandMapIterations;
+
         LandBirthText.text = LandBirthLimit.ToString();
+        LandBirthLimitSlider.value = LandBirthLimit;
+
         LandDeathText.text = LandDeathLimit.ToString();
+        LandDeathLimitSlider.value = LandDeathLimit;
+
         LandSampleText.text = LandMapSamples.ToString();
+        LandSamplesSlider.value = LandMapSamples;
+
         PopulationDensityText.text = InitialPopulationDensity.ToString();
+        ForestDensitySlider.value = InitialPopulationDensity;
+
         PopulationBirthText.text = PopulationBirthFactor.ToString();
+        PopulationBirthFactorSlider.value = PopulationBirthFactor;
+
         PopulationDeathText.text = PopulationDeathFactor.ToString();
+        PopulationDeathSlider.value = PopulationDeathFactor;
+
         PopulationSamplesText.text = PopulationSamples.ToString();
+        PopulationSampleSlider.value = PopulationSamples;
     }
     public void SetInitialPopDensity(int h)
     {
