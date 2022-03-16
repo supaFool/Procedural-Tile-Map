@@ -1,9 +1,16 @@
-﻿using UnityEngine;
+﻿using Assets.Scripts.MapBuilder;
+using System.Collections;
+using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
 
+using static MapSettings;
+
 public class MapBuilder : MonoBehaviour
 {
+    public Map map;
+
+    [Header("Grid Settings")]
     [SerializeField]
     private Grid MapGrid;
 
@@ -38,6 +45,8 @@ public class MapBuilder : MonoBehaviour
     [SerializeField]
     private Tile FirstPassTile;
 
+    [Header("Build Settings")]
+    [Space(10)]
     [SerializeField]
     private bool m_simFirstPassMap;
 
@@ -50,9 +59,6 @@ public class MapBuilder : MonoBehaviour
     //Rivers
     //28,3,2,4
 
-
-
-
     //Spawn Settings
 
     /// <summary>
@@ -60,11 +66,11 @@ public class MapBuilder : MonoBehaviour
     /// The higher the number, the more islands will be spawned for the algorithm to run on
     /// </summary>
     [Range(15, 55)]
-    public int InitialLandHeight;
+    public int InitialLandHeight = 26;
     //public Slider LandHeightSlider;
 
-    [Range(1, 30)]
-    public int LandMapIterations;
+    //[Range(1, 30)]
+    private int LandMapIterations = 6;
     public Slider LandIterationsSlider;
     public TMPro.TextMeshProUGUI LandMapIterationsText;
 
@@ -73,55 +79,72 @@ public class MapBuilder : MonoBehaviour
     /// <summary>
     /// Higher the number, Higher the cells per tick that have a chance to reproduce
     /// </summary>
-    [Range(1, 16)]
-    public int LandBirthLimit;
+    //[Range(1, 16)]
+    private int LandBirthLimit = 3;
     public Slider LandBirthLimitSlider;
     public TMPro.TextMeshProUGUI LandBirthText;
 
     /// <summary>
     /// The higher the number, the higher the probability of reproduction failure
     /// </summary>
-    [Range(1, 16)]
-    public int LandDeathLimit;
+    //[Range(1, 16)]
+    private int LandDeathLimit = 2;
     public Slider LandDeathLimitSlider;
-    public TMPro.TextMeshProUGUI LandDeathText; 
+    public TMPro.TextMeshProUGUI LandDeathText;
 
     /// <summary>
     /// How many times to sample the map per tick, Higher numbers creates smoother bordered maps
     /// </summary>
-    [Range(1, 10)]
-    public int LandMapSamples;
+    //[Range(1, 10)]
+    private int LandMapSamples = 6;
     public Slider LandSamplesSlider;
-    public TMPro.TextMeshProUGUI LandSampleText; 
+    public TMPro.TextMeshProUGUI LandSampleText;
 
-    [Range(1, 100)]
-    public int InitialPopulationDensity;
+    //[Range(1, 100)]
+    private int InitialPopulationDensity = 2;
     public Slider ForestDensitySlider;
-    public TMPro.TextMeshProUGUI PopulationDensityText; 
+    public TMPro.TextMeshProUGUI PopulationDensityText;
 
-    [Range(1, 16)]
-    public int PopulationBirthFactor;
+    //[Range(1, 16)]
+    private int PopulationBirthFactor = 5;
     public Slider PopulationBirthFactorSlider;
     public TMPro.TextMeshProUGUI PopulationBirthText;
 
-    [Range(1, 16)]
-    public int PopulationDeathFactor;
+    //[Range(1, 16)]
+    private int PopulationDeathFactor = 11;
     public Slider PopulationDeathSlider;
     public TMPro.TextMeshProUGUI PopulationDeathText;
 
-    [Range(1, 10)]
-    public int PopulationSamples;
+    //[Range(1, 10)]
+    private int PopulationSamples = 10;
     public Slider PopulationSampleSlider;
     public TMPro.TextMeshProUGUI PopulationSamplesText;
 
+    [Header("UI Components")]
+    [Space(5)]
+    public TMPro.TextMeshProUGUI StatusLabelTitle;
+    public TMPro.TextMeshProUGUI StatusLabelText;
+
+    [Header("Controls")]
+    [Space(5)]
     public Button SimButton;
+    public Button ResetButton;
+
+    [Header("Options")]
+    [Space(5)]
+    private bool LogDataOnComplete;
+    public Toggle LogDataOnCompleteToggle;
 
     private bool m_newMap;
     private int[,] m_terrainMap;
     private int[,] m_treeMap;
+    private static int water;
+    private static int land;
+    private static int total = MapSettings.Width * MapSettings.Height;
 
+    [Header("Not yet used")]
+    [Space(5)]
     public GameObject WorldCache;
-    private WorldCacheComp m_worldCacheComp;
 
     #endregion Vars
 
@@ -131,13 +154,15 @@ public class MapBuilder : MonoBehaviour
     {
         mapSettings = new MapSettings();
         m_newMap = true;
-        SimButton.onClick.AddListener(SimButtonAction) ;
+        SimButton.onClick.AddListener(SimButtonAction);
+        ResetButton.onClick.AddListener(ResetValues);
         SetSliders();
     }
 
     // Update is called once per frame
     private void Update()
     {
+        LogDataOnComplete = LogDataOnCompleteToggle.isOn;
         if (m_newMap && startRendering)
         {
             Simulate();
@@ -175,6 +200,8 @@ public class MapBuilder : MonoBehaviour
 
         if (Input.GetMouseButtonDown(1))
         {
+            water = 0;
+            land = 0;
             startRendering = false;
             m_newMap = true;
             ClearMap(true);
@@ -185,10 +212,31 @@ public class MapBuilder : MonoBehaviour
             MapGrid.cellGap = new Vector3(0, 0, 0);
             SimButton.GetComponentInChildren<Text>().text = "Simulate";
         }
+        string water_readout = $"Water Tiles: {water}/{total}";
+        string land_readout = $"LandTiles Tiles: {land}/{total}";
+        StatusLabelText.text = water_readout + "\n" + land_readout;
         #endregion
     }
+
+    private void ResetValues()
+    {
+        InitialLandHeight = 26;
+        LandMapIterations = 6;
+        LandBirthLimit = 3;
+        LandDeathLimit = 2;
+        LandMapSamples = 6;
+        InitialPopulationDensity = 2;
+        PopulationBirthFactor = 5;
+        PopulationDeathFactor = 11;
+        PopulationSamples = 10;
+
+        InitSliders();
+    }
+
     public void SimButtonAction()
     {
+        water = 0;
+        land = 0;
         startRendering = !startRendering;
         if (m_newMap && startRendering)
         {
@@ -201,7 +249,37 @@ public class MapBuilder : MonoBehaviour
             SimButton.GetComponentInChildren<Text>().text = "Stop";
         }
         else
+        {
             SimButton.GetComponentInChildren<Text>().text = "Simulate";
+            if (LogDataOnComplete)
+            {
+                StartCoroutine(LogMapData());
+                Debug.Log("Reading Map...");
+            }
+
+        }
+    }
+
+    IEnumerator LogMapData()
+    {
+
+        for (int x = 0; x < MapSettings.Width; x++)
+        {
+            for (int y = 0; y < MapSettings.Height; y++)
+            {
+
+                if (map.Tiles[x, y].Type == TileType.LAND)
+                {
+                    land++;
+                }
+                if (map.Tiles[x, y].Type == TileType.WATER)
+                {
+                    water++;
+                }
+
+            }
+            yield return null;
+        }
     }
 
     private void UpdateMap()
@@ -260,35 +338,54 @@ public class MapBuilder : MonoBehaviour
     private void InitSliders()
     {
         LandMapIterationsText.text = LandMapIterations.ToString();
+        LandIterationsSlider.value = LandMapIterations;
+
         LandBirthText.text = LandBirthLimit.ToString();
+        LandBirthLimitSlider.value = LandBirthLimit;
+
         LandDeathText.text = LandDeathLimit.ToString();
+        LandDeathLimitSlider.value = LandDeathLimit;
+
         LandSampleText.text = LandMapSamples.ToString();
+        LandSamplesSlider.value = LandMapSamples;
+
         PopulationDensityText.text = InitialPopulationDensity.ToString();
+        ForestDensitySlider.value = InitialPopulationDensity;
+
         PopulationBirthText.text = PopulationBirthFactor.ToString();
+        PopulationBirthFactorSlider.value = PopulationBirthFactor;
+
         PopulationDeathText.text = PopulationDeathFactor.ToString();
+        PopulationDeathSlider.value = PopulationDeathFactor;
+
         PopulationSamplesText.text = PopulationSamples.ToString();
+        PopulationSampleSlider.value = PopulationSamples;
     }
     public void SetInitialPopDensity(int h)
     {
         InitialPopulationDensity = h;
+        PopulationDensityText.text = InitialPopulationDensity.ToString();
         Debug.Log($"Forest Density set to: {h}");
     }
 
     public void SetPopulationBirthFactor(int h)
     {
         PopulationBirthFactor = h;
+        PopulationBirthText.text = PopulationBirthFactor.ToString();
         Debug.Log($"Drought Factor set to: {h}");
     }
 
     public void SetPopulationSamples(int h)
     {
         PopulationSamples = h;
+        PopulationSamplesText.text = PopulationSamples.ToString();
         Debug.Log($"Drought Samples set to: {h}");
     }
 
     public void SetPopulationDeathFactor(int h)
     {
         PopulationDeathFactor = h;
+        PopulationDeathText.text = PopulationDeathFactor.ToString();
         Debug.Log($"Drought Death Limit set to: {h}");
     }
 
@@ -353,7 +450,7 @@ public class MapBuilder : MonoBehaviour
                 if (m_terrainMap[x, y] == 1)
                 {
                     FirstPassMap.SetTile(new Vector3Int(-x + (m_terrainMap.GetLength(0)) / 2, -y + (m_terrainMap.GetLength(1)) / 2, 0), FirstPassTile);
-
+                    map.Tiles[x, y] = Struct_Tile.CreateTile(-x + (m_terrainMap.GetLength(0)) / 2, -y + (m_terrainMap.GetLength(1)) / 2, TileType.LAND);
                     var r = Random.Range(0, 100);
                     if (r <= 3)
                     {
@@ -364,12 +461,15 @@ public class MapBuilder : MonoBehaviour
                 if (m_terrainMap[x, y] == 0)
                 {
                     FirstPassMap.SetTile(new Vector3Int(-x + (m_terrainMap.GetLength(0)) / 2, -y + (m_terrainMap.GetLength(1)) / 2, 0), BaseTile);
+                    map.Tiles[x, y] = Struct_Tile.CreateTile(x, y, TileType.WATER);
 
                     m_treeMap[x, y] = 0;
                 }
 
             }
+
         }
+
     }
 
     private void SimulateTrees(int samples)
@@ -378,13 +478,13 @@ public class MapBuilder : MonoBehaviour
         {
             m_treeMap = BuildForest(m_treeMap);
         }
-        for (int x = 0; x < mapSettings.Width; x++)
+        for (int x = 0; x < Width; x++)
         {
-            for (int y = 0; y < mapSettings.Height; y++)
+            for (int y = 0; y < Height; y++)
             {
                 if (m_treeMap[x, y] == 3)
                 {
-                    TreeMap.SetTile(new Vector3Int(-x + mapSettings.Width / 2, -y + mapSettings.Height / 2, 0), SecondPassTile);
+                    TreeMap.SetTile(new Vector3Int(-x + Width / 2, -y + Height / 2, 0), SecondPassTile);
                 }
             }
         }
@@ -403,8 +503,8 @@ public class MapBuilder : MonoBehaviour
     {
         if (m_terrainMap == null)
         {
-            m_terrainMap = new int[mapSettings.Width, mapSettings.Height];
-            m_treeMap = new int[mapSettings.Width, mapSettings.Height];
+            m_terrainMap = new int[Width, Height];
+            m_treeMap = new int[Width, Height];
             InitPos();
         }
     }
@@ -470,9 +570,9 @@ public class MapBuilder : MonoBehaviour
         else
         {
             updatedMap = new int[m_terrainMap.GetLength(0), m_terrainMap.GetLength(1)];
-            for (int x = 0; x < mapSettings.Width; x++)
+            for (int x = 0; x < Width; x++)
             {
-                for (int y = 0; y < mapSettings.Height; y++)
+                for (int y = 0; y < Height; y++)
                 {
                     neighbor = 0;
                     foreach (var b in bounds.allPositionsWithin)
@@ -515,15 +615,15 @@ public class MapBuilder : MonoBehaviour
 
     private int[,] BuildForest(int[,] tempMap)
     {
-        int[,] newMap = new int[mapSettings.Width, mapSettings.Height];
+        int[,] newMap = new int[Width, Height];
         int neighbor;
         BoundsInt bounds = new BoundsInt(-1, -1, 0, 3, 3, 1);
 
         #region Build Forest
 
-        for (int x = 0; x < mapSettings.Width; x++)
+        for (int x = 0; x < Width; x++)
         {
-            for (int y = 0; y < mapSettings.Height; y++)
+            for (int y = 0; y < Height; y++)
             {
                 //Init Treemap
                 if (m_treeMap[x, y] == 9)
@@ -534,7 +634,7 @@ public class MapBuilder : MonoBehaviour
                 foreach (var b in bounds.allPositionsWithin)
                 {
                     if (b.x == 0 && b.y == 0) continue;
-                    if (x + b.x >= 0 && x + b.x < mapSettings.Width && y + b.y >= 0 && y + b.y < mapSettings.Height)
+                    if (x + b.x >= 0 && x + b.x < Width && y + b.y >= 0 && y + b.y < Height)
                     {
                         neighbor += tempMap[x + b.x, y + b.y];
                     }
@@ -555,7 +655,7 @@ public class MapBuilder : MonoBehaviour
 
                 if (tempMap[x, y] == 4)
                 {
-                    if (neighbor > LandBirthLimit) newMap[x, y] = 3;
+                    if (neighbor > PopulationBirthFactor) newMap[x, y] = 3;
                     else
                     {
                         newMap[x, y] = 4;
@@ -571,10 +671,10 @@ public class MapBuilder : MonoBehaviour
 
     private void InitPos()
     {
-        Debug.Log("InitPos, Map Width = " + mapSettings.Width);
-        for (int x = 0; x < mapSettings.Width; x++)
+        Debug.Log("InitPos, Map Width = " + Width);
+        for (int x = 0; x < Width; x++)
         {
-            for (int y = 0; y < mapSettings.Height; y++)
+            for (int y = 0; y < Height; y++)
             {
                 m_terrainMap[x, y] = Random.Range(1, 101) < InitialLandHeight ? 1 : 0;
             }
@@ -583,9 +683,9 @@ public class MapBuilder : MonoBehaviour
 
     private void InitTreeMap()
     {
-        for (int x = 0; x < mapSettings.Width; x++)
+        for (int x = 0; x < Width; x++)
         {
-            for (int y = 0; y < mapSettings.Height; y++)
+            for (int y = 0; y < Height; y++)
             {
                 //Init Treemap
                 if (m_treeMap[x, y] == 9)
