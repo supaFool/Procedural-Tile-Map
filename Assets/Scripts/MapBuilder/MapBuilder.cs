@@ -248,9 +248,9 @@ public class MapBuilder : MonoBehaviour
             {
                 for (int y = 0; y < MapSettings.Height; y++)
                 {
-                    Debug.Log($"Tile [{x},{y}] = {map.Tiles[x, y].Type}");
-                    yield return null;
+                    Debug.Log($"Tile [{x + 1},{y + 1}] = {map.Tiles[x, y].Type}");
                 }
+                    yield return null;
             }
     }
 
