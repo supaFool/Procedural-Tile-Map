@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.MapBuilder;
+using System.Collections;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 using UnityEngine.UI;
@@ -232,19 +233,25 @@ public class MapBuilder : MonoBehaviour
         else
         {
             SimButton.GetComponentInChildren<Text>().text = "Simulate";
-
             if (LogDataOnComplete)
             {
-                for (int x = 0; x < MapSettings.Width; x++)
-                {
-                    for (int y = 0; y < MapSettings.Height; y++)
-                    {
-                        Debug.Log($"Array [{x},{y}] = {map.Tiles[x, y].Type}");
-                    }
-                }
+            StartCoroutine(LogMapData());
+            Debug.Log("Reading Map...");
             }
 
         }
+    }
+
+    IEnumerator LogMapData()
+    {
+            for (int x = 0; x < MapSettings.Width; x++)
+            {
+                for (int y = 0; y < MapSettings.Height; y++)
+                {
+                    Debug.Log($"Tile [{x},{y}] = {map.Tiles[x, y].Type}");
+                    yield return null;
+                }
+            }
     }
 
     private void UpdateMap()
