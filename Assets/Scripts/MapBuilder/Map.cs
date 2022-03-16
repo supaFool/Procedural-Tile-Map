@@ -4,7 +4,7 @@ using UnityEngine;
 public class Map : MonoBehaviour
 {
 
-    public Struct_Tile[,] Tiles;
+    public Struct_Tile[,] Tiles { get; private set; }
 
     private void Awake()
     {

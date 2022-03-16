@@ -120,6 +120,11 @@ public class MapBuilder : MonoBehaviour
     public Slider PopulationSampleSlider;
     public TMPro.TextMeshProUGUI PopulationSamplesText;
 
+    [Header("UI Components")]
+    [Space(5)]
+    public TMPro.TextMeshProUGUI StatusLabelTitle;
+    public TMPro.TextMeshProUGUI StatusLabelText;
+
     [Header("Controls")]
     [Space(5)]
     public Button SimButton;
@@ -127,11 +132,15 @@ public class MapBuilder : MonoBehaviour
 
     [Header("Options")]
     [Space(5)]
-    public bool LogDataOnComplete;
+    private bool LogDataOnComplete;
+    public Toggle LogDataOnCompleteToggle;
 
     private bool m_newMap;
     private int[,] m_terrainMap;
     private int[,] m_treeMap;
+    private static int water;
+    private static int land;
+    private static int total = MapSettings.Width * MapSettings.Height;
 
     [Header("Not yet used")]
     [Space(5)]
@@ -153,6 +162,7 @@ public class MapBuilder : MonoBehaviour
     // Update is called once per frame
     private void Update()
     {
+        LogDataOnComplete = LogDataOnCompleteToggle.isOn;
         if (m_newMap && startRendering)
         {
             Simulate();
@@ -190,6 +200,8 @@ public class MapBuilder : MonoBehaviour
 
         if (Input.GetMouseButtonDown(1))
         {
+            water = 0;
+            land = 0;
             startRendering = false;
             m_newMap = true;
             ClearMap(true);
@@ -200,6 +212,9 @@ public class MapBuilder : MonoBehaviour
             MapGrid.cellGap = new Vector3(0, 0, 0);
             SimButton.GetComponentInChildren<Text>().text = "Simulate";
         }
+        string water_readout = $"Water Tiles: {water}/{total}";
+        string land_readout = $"LandTiles Tiles: {land}/{total}";
+        StatusLabelText.text = water_readout + "\n" + land_readout;
         #endregion
     }
 
@@ -214,11 +229,14 @@ public class MapBuilder : MonoBehaviour
         PopulationBirthFactor = 5;
         PopulationDeathFactor = 11;
         PopulationSamples = 10;
+
         InitSliders();
     }
 
     public void SimButtonAction()
     {
+        water = 0;
+        land = 0;
         startRendering = !startRendering;
         if (m_newMap && startRendering)
         {
@@ -235,8 +253,8 @@ public class MapBuilder : MonoBehaviour
             SimButton.GetComponentInChildren<Text>().text = "Simulate";
             if (LogDataOnComplete)
             {
-            StartCoroutine(LogMapData());
-            Debug.Log("Reading Map...");
+                StartCoroutine(LogMapData());
+                Debug.Log("Reading Map...");
             }
 
         }
@@ -244,14 +262,24 @@ public class MapBuilder : MonoBehaviour
 
     IEnumerator LogMapData()
     {
-            for (int x = 0; x < MapSettings.Width; x++)
+
+        for (int x = 0; x < MapSettings.Width; x++)
+        {
+            for (int y = 0; y < MapSettings.Height; y++)
             {
-                for (int y = 0; y < MapSettings.Height; y++)
+
+                if (map.Tiles[x, y].Type == TileType.LAND)
                 {
-                    Debug.Log($"Tile [{x + 1},{y + 1}] = {map.Tiles[x, y].Type}");
+                    land++;
                 }
-                    yield return null;
+                if (map.Tiles[x, y].Type == TileType.WATER)
+                {
+                    water++;
+                }
+
             }
+            yield return null;
+        }
     }
 
     private void UpdateMap()
