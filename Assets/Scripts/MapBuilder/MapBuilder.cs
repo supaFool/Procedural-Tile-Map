@@ -67,6 +67,8 @@ public class MapBuilder : MonoBehaviour
     /// </summary>
     [Range(15, 55)]
     public int InitialLandHeight = 26;
+    public Slider InitialHeightSlider;
+    public TMPro.TextMeshProUGUI InitialHeightText;
     //public Slider LandHeightSlider;
 
     //[Range(1, 30)]
@@ -81,16 +83,16 @@ public class MapBuilder : MonoBehaviour
     /// </summary>
     //[Range(1, 16)]
     private int LandBirthLimit = 3;
-    public Slider LandBirthLimitSlider;
-    public TMPro.TextMeshProUGUI LandBirthText;
+    //public Slider LandBirthLimitSlider;
+    //public TMPro.TextMeshProUGUI LandBirthText;
 
     /// <summary>
     /// The higher the number, the higher the probability of reproduction failure
     /// </summary>
     //[Range(1, 16)]
     private int LandDeathLimit = 2;
-    public Slider LandDeathLimitSlider;
-    public TMPro.TextMeshProUGUI LandDeathText;
+    //public Slider LandDeathLimitSlider;
+    //public TMPro.TextMeshProUGUI LandDeathText;
 
     /// <summary>
     /// How many times to sample the map per tick, Higher numbers creates smoother bordered maps
@@ -157,6 +159,7 @@ public class MapBuilder : MonoBehaviour
         SimButton.onClick.AddListener(SimButtonAction);
         ResetButton.onClick.AddListener(ResetValues);
         SetSliders();
+        ResetValues();
     }
 
     // Update is called once per frame
@@ -200,6 +203,7 @@ public class MapBuilder : MonoBehaviour
 
         if (Input.GetMouseButtonDown(1))
         {
+            StartCoroutine(LogMapData());
             water = 0;
             land = 0;
             startRendering = false;
@@ -262,6 +266,7 @@ public class MapBuilder : MonoBehaviour
 
     IEnumerator LogMapData()
     {
+        // TODO: Add to a new class
 
         for (int x = 0; x < MapSettings.Width; x++)
         {
@@ -324,10 +329,10 @@ public class MapBuilder : MonoBehaviour
     #region Functions
     private void SetSliders()
     {
-        //LandHeightSlider.onValueChanged.AddListener(delegate { SetStartingTerrainHeight(((int)LandHeightSlider.value)); });
+        InitialHeightSlider.onValueChanged.AddListener(delegate { SetStartingTerrainHeight(((int)InitialHeightSlider.value)); });
         LandIterationsSlider.onValueChanged.AddListener(delegate { SetLandIteration(((int)LandIterationsSlider.value)); });
-        LandBirthLimitSlider.onValueChanged.AddListener(delegate { SetLandBirthLimiter(((int)LandBirthLimitSlider.value)); });
-        LandDeathLimitSlider.onValueChanged.AddListener(delegate { SetLandDeathLimit(((int)LandDeathLimitSlider.value)); });
+        //LandBirthLimitSlider.onValueChanged.AddListener(delegate { SetLandBirthLimiter(((int)LandBirthLimitSlider.value)); });
+        //LandDeathLimitSlider.onValueChanged.AddListener(delegate { SetLandDeathLimit(((int)LandDeathLimitSlider.value)); });
         LandSamplesSlider.onValueChanged.AddListener(delegate { SetLandSamples(((int)LandSamplesSlider.value)); });
         ForestDensitySlider.onValueChanged.AddListener(delegate { SetInitialPopDensity(((int)ForestDensitySlider.value)); });
         PopulationBirthFactorSlider.onValueChanged.AddListener(delegate { SetPopulationBirthFactor(((int)PopulationBirthFactorSlider.value)); });
@@ -337,14 +342,17 @@ public class MapBuilder : MonoBehaviour
     }
     private void InitSliders()
     {
+        InitialHeightText.text = InitialLandHeight.ToString();
+        InitialHeightSlider.value = InitialLandHeight;
+
         LandMapIterationsText.text = LandMapIterations.ToString();
         LandIterationsSlider.value = LandMapIterations;
 
-        LandBirthText.text = LandBirthLimit.ToString();
-        LandBirthLimitSlider.value = LandBirthLimit;
+        //LandBirthText.text = LandBirthLimit.ToString();
+        //LandBirthLimitSlider.value = LandBirthLimit;
 
-        LandDeathText.text = LandDeathLimit.ToString();
-        LandDeathLimitSlider.value = LandDeathLimit;
+        //LandDeathText.text = LandDeathLimit.ToString();
+        //LandDeathLimitSlider.value = LandDeathLimit;
 
         LandSampleText.text = LandMapSamples.ToString();
         LandSamplesSlider.value = LandMapSamples;
@@ -392,6 +400,7 @@ public class MapBuilder : MonoBehaviour
     public void SetStartingTerrainHeight(int h)
     {
         InitialLandHeight = h;
+        InitialHeightText.text = $"{h}";
         Debug.Log($"Land Height set to: {h}");
     }
 
@@ -406,14 +415,14 @@ public class MapBuilder : MonoBehaviour
     public void SetLandDeathLimit(int h)
     {
         LandDeathLimit = h;
-        LandDeathText.text = $"{h}";
+        //LandDeathText.text = $"{h}";
         Debug.Log($"Land Death Limit set to: {h}");
     }
 
     public void SetLandBirthLimiter(int h)
     {
         LandBirthLimit = h;
-        LandBirthText.text = $"{h}";
+        //LandBirthText.text = $"{h}";
         Debug.Log($"Land Birth Limit set to: {h}");
 
     }
