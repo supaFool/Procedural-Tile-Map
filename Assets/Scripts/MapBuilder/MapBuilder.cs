@@ -203,6 +203,7 @@ public class MapBuilder : MonoBehaviour
 
         if (Input.GetMouseButtonDown(1))
         {
+            StartCoroutine(LogMapData());
             water = 0;
             land = 0;
             startRendering = false;
@@ -265,6 +266,7 @@ public class MapBuilder : MonoBehaviour
 
     IEnumerator LogMapData()
     {
+        // TODO: Add to a new class
 
         for (int x = 0; x < MapSettings.Width; x++)
         {
